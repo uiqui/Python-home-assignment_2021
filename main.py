@@ -29,10 +29,12 @@ def insertInto(data):
         con = connect()
         cur = con.cursor()
 
-        sql_insert_query = """ INSERT INTO interface (connection, name, description, config, type, infra_type, port_channel_id, max_frame_size) 
-                            VALUES (%d, %s, %s, %s, %s, %s, %d, %d) """
+        sql_insert_query = """ INSERT INTO interface (name, description, config, max_frame_size) 
+                            VALUES (%s, %s, %s, %d) """
         result = cur.executemany(sql_insert_query, data)
         con.commit()
+
+        #port_channel_id
     except (Exception, psycopg2.Error) as error:
         print("Failed inserting record into mobile table{}".format(error))
     finally:
