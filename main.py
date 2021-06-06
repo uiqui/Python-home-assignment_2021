@@ -1,10 +1,17 @@
 import psycopg2
 
-def selectPrint(cur):
+def selectPrint():
+    con = connect()
+    cur = con.cursor()
+
     cur.execute("select * from interface")
     rows = cur.fetchall()
     for row in rows:
         print(row)
+
+    cur.close()
+    con.close()
+
 
 
 def connect():
@@ -17,21 +24,21 @@ def connect():
     return con
 
 
-def insertInto(con, cur, data):
-    sql_insert_query = """ INSERT INTO interface (connection, name, description, config, type, infra_type, port_channel_id, max_frame_size) 
-                           VALUES (%d, %s, %s, %s, %s, %s, %d, %d) """
-    result = cursor.executemany(sql_insert_query, data)
-    connection.commit()
+def insertInto(data):
+    try:
+        con = connect()
+        cur = con.cursor()
+
+        sql_insert_query = """ INSERT INTO interface (connection, name, description, config, type, infra_type, port_channel_id, max_frame_size) 
+                            VALUES (%d, %s, %s, %s, %s, %s, %d, %d) """
+        result = cur.executemany(sql_insert_query, data)
+        con.commit()
+    except (Exception, psycopg2.Error) as error:
+        print("Failed inserting record into mobile table{}".format(error))
+    finally:
+        if con:
+            cur.close()
+            con.close()
 
 
-#cur.execute("INSERT INTO interface VALUES (2,2,3, 4, NULL, 6, 7 )")
-
-
-con = connect()
-cur = con.cursor()
-
-selectPrint(cur)
-
-cur.close()
-
-con.close()
+selectPrint()
