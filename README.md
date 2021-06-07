@@ -25,5 +25,4 @@ example:
 config file should contain: database, user, password, port
 
 app overview:
-get paths to json file and configfile
-pass json file interface information to database table interface
+get paths to json file and configfile, pass json file interface information to database table interface
