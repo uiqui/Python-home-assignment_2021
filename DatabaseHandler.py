@@ -1,6 +1,9 @@
 
-#self.psycopg2 = import psycopg2
 class DatabaseHandler:
+    #self.psycopg2 = import psycopg2
+    #self.configparser = import configparser
+    #sys = import sys
+    #configPath = path to config file
     def __init__(self, psycopg2, configparser, sys, configPath):
         self.psycopg2 = psycopg2
         self.config = configparser.ConfigParser()
@@ -10,10 +13,7 @@ class DatabaseHandler:
             print ("Could not open/read file:", configPath)
             sys.exit()
 
-        self.config.read(configPath)
-
-
-        
+        self.config.read(configPath)     
 
 
     def __connect(self):

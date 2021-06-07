@@ -1,19 +1,25 @@
+#custom classes
 import DatabaseHandler
 import JsonParser
-
+#libs
 import psycopg2
 import json
 import sys
 import configparser
 
-path = 'configClear_v2.json'
-pathConfig = 'config.ini'
+
+lengthFlag = not (len(sys.argv) == 3)
+if lengthFlag:
+    sys.exit()
+
+pathJson = sys.argv[1]
+pathConfig = sys.argv[2]
 
 db = DatabaseHandler.DatabaseHandler(psycopg2, configparser, sys, pathConfig)
 parser = JsonParser.JsonParser(json, sys)
 
-resultData, resultPortId = parser.getInterfaceJson(path)
+resultData, resultPortId = parser.getInterfaceJson(pathJson)
 
 if resultData:
-    db.deleteInterface()
+    #db.deleteInterface() #for testing purposes
     db.insertIntoInterfaceTable(resultData, resultPortId)
