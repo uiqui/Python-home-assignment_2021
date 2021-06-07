@@ -17,8 +17,10 @@ json file, line 1890, extra ","
 
 useage:
 run main script with parameters
-[0] = 'configClear_v2.json' #path to json file with data to extract and insert to database
-[1] = 'config.ini'          #path to config file with credentials to log into database
+#path to json file with data to extract and insert to database
+[0] = 'configClear_v2.json'
+#path to config file with credentials to log into database
+[1] = 'config.ini'          
 
 #config file should contain:
 #database
