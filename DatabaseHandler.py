@@ -1,20 +1,34 @@
 
 #self.psycopg2 = import psycopg2
 class DatabaseHandler:
-    def __init__(self, psycopg2):
+    def __init__(self, psycopg2, configparser, sys, configPath):
         self.psycopg2 = psycopg2
+        self.config = configparser.ConfigParser()
+        try:
+            file = open(configPath, 'r')
+        except OSError:
+            print ("Could not open/read file:", configPath)
+            sys.exit()
+
+        self.config.read(configPath)
+
+
+        
 
 
     def __connect(self):
         con = self.psycopg2.connect(
-                database="interfaceDB",
-                user= "postgres",
-                password="postgress",
-                port="5432"
+                database = self.config["interfaceDB"]["database"],
+                user = self.config["interfaceDB"]["user"],
+                password = self.config["interfaceDB"]["password"],
+                port = self.config["interfaceDB"]["port"]
             )
         return con
 
 
+    # pordIdList = contains pairs of names
+    # [0] = name of the ethernet
+    # [1] = name of the port that we want to link to ethernet
     def __updatePortId(self, portIdList):
         try:
             con = self.__connect()
@@ -40,7 +54,11 @@ class DatabaseHandler:
 
 
     # data to insert
-    # portIdList to add after insert
+    # [0] = name of the interface
+    # [1] = description about interface
+    # [2] = config json of the interface
+    # [3] = max_frame_size of the interface
+    # pordIdList list of pairs to be added later to DB
     def insertIntoInterfaceTable(self, data, portIdList):
         try:
             con = self.__connect()
@@ -51,16 +69,16 @@ class DatabaseHandler:
 
             result = cur.executemany(sql_insert_query, data)
             con.commit()
-
-            #port_channel_id
+            
+            cur.close()
+            con.close()
+            self.__updatePortId(portIdList)
         except (Exception, self.psycopg2.Error) as error:
             print("Failed inserting record into interface table {}".format(error))
-        finally:
             if cur:
                 cur.close()
             if con:
                 con.close()
-        self.__updatePortId(portIdList)
 
 
     def deleteInterface(self):

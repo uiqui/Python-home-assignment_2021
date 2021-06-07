@@ -3,13 +3,17 @@ import JsonParser
 
 import psycopg2
 import json
+import sys
+import configparser
 
 path = 'configClear_v2.json'
+pathConfig = 'config.ini'
 
-db = DatabaseHandler.DatabaseHandler(psycopg2)
-parser = JsonParser.JsonParser(json)
+db = DatabaseHandler.DatabaseHandler(psycopg2, configparser, sys, pathConfig)
+parser = JsonParser.JsonParser(json, sys)
 
 resultData, resultPortId = parser.getInterfaceJson(path)
 
-db.deleteInterface()
-db.insertIntoInterfaceTable(resultData, resultPortId)
+if resultData:
+    db.deleteInterface()
+    db.insertIntoInterfaceTable(resultData, resultPortId)

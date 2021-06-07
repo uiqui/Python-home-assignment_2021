@@ -1,16 +1,21 @@
 
 # self.json = import json
 class JsonParser:
-    def __init__(self, json):
-        self.json = json    
+    def __init__(self, json, sys):
+        self.json = json
+        self.sys = sys    
     
     
-    # path to json file
+    # path = path to json file
     def getInterfaceJson(self, path): 
         resultData = []
         resultPortId =[]
 
-        file = open(path, 'r')
+        try:
+            file = open(path, 'r')
+        except OSError:
+            print ("Could not open/read file:", path)
+            self.sys.exit()
         data = self.json.load(file)
         file.close()
 
